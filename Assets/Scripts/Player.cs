@@ -75,7 +75,7 @@ public class Player : Charchter
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Enemy>(out _))
+        if (collision.gameObject.TryGetComponent<EnemyAi>(out _))
         {
             Die();
         }
