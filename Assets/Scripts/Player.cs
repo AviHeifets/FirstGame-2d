@@ -9,16 +9,24 @@ public class Player : Charchter
 {
     private Slider FearBar;
     Vector2 direction;
-
     int lastDirection;
 
-    private void Awake()
+    private List<Image> BatteryIcons;
+    private int batteryCount;
+    private Sprite FullBattery;
+
+    private void Start()
     {
+        BatteryIcons = new List<Image>();
         speed = 6.0f;
         FearBar = GameObject.Find("FearBar").GetComponent<Slider>();
         RigidBody = GetComponent<Rigidbody2D>();
 
-    }
+        FullBattery = Resources.Load<Sprite>("Fullbattery");
+        BatteryIcons.Add(GameObject.Find("Battery1").GetComponent<Image>());
+        BatteryIcons.Add(GameObject.Find("Battery2").GetComponent<Image>());
+        BatteryIcons.Add(GameObject.Find("Battery3").GetComponent<Image>());
+    } 
 
     private void Update()
     {
@@ -28,15 +36,6 @@ public class Player : Charchter
     void FixedUpdate()
     {
         RigidBody.MovePosition(RigidBody.position + speed * Time.fixedDeltaTime * direction);
-        PreventSpin();
-    }
-
-    private void PreventSpin()
-    {
-        RigidBody.angularVelocity = 0;
-
-        if (RigidBody.transform.rotation.z != 0)
-            RigidBody.transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
 
@@ -79,6 +78,21 @@ public class Player : Charchter
         {
             Die();
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Battery")
+        {
+            if (batteryCount < 3)
+            {
+                batteryCount++;
+                collision.gameObject.SetActive(false);
+                BatteryIcons[batteryCount - 1].sprite = FullBattery;
+            }
+        }
+            
+            
     }
 
 
